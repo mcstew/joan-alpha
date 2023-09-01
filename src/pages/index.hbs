@@ -13,6 +13,7 @@
       11px; margin-top: 11px; background-color: #007bff; color: white; border:
       none; cursor: pointer; }
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 
    <body>
@@ -30,7 +31,7 @@
         const chatInput = document.getElementById("chat-input");
         const chatOutput = document.getElementById("chat-output");
         const userInput = chatInput.value;
-        const serverUrl = "https://sponge-patch-jumpsuit.glitch.me/api/chat"; // Replace with your Glitch URL
+        const serverUrl = "https://joan-alpha.glitch.me/api/chat"; // Replace everything before /api/chat with your Glitch URL
 
         axios.post(serverUrl, { userInput: userInput })
           .then((response) => {
