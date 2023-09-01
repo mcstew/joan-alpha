@@ -1,52 +1,113 @@
+<!DOCTYPE html>
 <html>
-
-  <head>
-    <title>Joan [Alpha]</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 0; padding: 0;
-      background-color: #f4f4f4; } #chat-container { max-width: 960px; margin:
-      auto; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0,
-      0, 0, 0.1); } #chat-output { height: 400px; overflow-y: scroll; border:
-      1px solid #ccc; padding: 20px; /* Added padding */ margin-bottom: 20px; }
-      #chat-input { width: 80%; padding: 10px; } button { width: 18%; padding:
-      11px; margin-top: 11px; background-color: #007bff; color: white; border:
-      none; cursor: pointer; }
-    </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-
-   <body>
-    <div id="chat-container">
-      <h1>Joan Alpha Test</h1>
-      <div id="chat-output"></div>
-      <div>
-        <input type="text" id="chat-input" />
-        <button onclick="sendMessage()">Send</button>
-      </div>
+<head>
+  <title>Joan [Alpha]</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    #chat-container {
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    #chat-output {
+      height: 400px;
+      overflow-y: scroll;
+      border: 2px solid #ccc; /* Thicker border */
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    #chat-input {
+      width: 80%;
+      padding: 10px;
+    }
+    button {
+      width: 18%;
+      padding: 11px;
+      margin-top: 11px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #5a6268;
+    }
+    button:active {
+      background-color: #4e555b;
+    }
+    .chat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .chat-message {
+      flex: 1;
+    }
+    .chat-timestamp {
+      flex: 0;
+      margin-left: 20px;
+      color: #aaa;
+      font-size: 0.8em;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div id="chat-container">
+    <h1>Joan Alpha Test</h1>
+    <div id="chat-output"></div>
+    <div>
+      <input type="text" id="chat-input" />
+      <button onclick="sendMessage()">Send</button>
     </div>
-    <script>
-      function sendMessage() {
-        console.log("Sending message...");
-        const chatInput = document.getElementById("chat-input");
-        const chatOutput = document.getElementById("chat-output");
-        const userInput = chatInput.value;
-        const serverUrl = "https://joan-alpha.glitch.me/api/chat"; // Replace everything before /api/chat with your Glitch URL
+  </div>
+  <script>
+    function sendMessage() {
+      console.log("Sending message...");
+      const chatInput = document.getElementById("chat-input");
+      const chatOutput = document.getElementById("chat-output");
+      const userInput = chatInput.value;
+      const serverUrl = "https://joan-alpha.glitch.me/api/chat";
+      const timestamp = new Date().toLocaleTimeString();
 
-        axios.post(serverUrl, { userInput: userInput })
-          .then((response) => {
-            const botReply = response.data.message;
-            chatOutput.innerHTML += `<p>User: ${userInput}</p>`;
-            chatOutput.innerHTML += `<p>Bot: ${botReply}</p>`;
-            chatOutput.scrollTop = chatOutput.scrollHeight;
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            chatOutput.innerHTML += `<p>Bot: Sorry, I couldn't process that request.</p>`;
-          });
+      axios.post(serverUrl, { userInput: userInput })
+        .then((response) => {
+          const botReply = response.data.message;
+          chatOutput.innerHTML += `
+            <div class="chat-row">
+              <div class="chat-message">User: ${userInput}</div>
+              <div class="chat-timestamp">${timestamp}</div>
+            </div>
+            <div class="chat-row">
+              <div class="chat-message">Bot: ${botReply}</div>
+              <div class="chat-timestamp">${timestamp}</div>
+            </div>`;
+          chatOutput.scrollTop = chatOutput.scrollHeight;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          chatOutput.innerHTML += `<p>Bot: Sorry, I couldn't process that request.</p>`;
+        });
 
-        chatInput.value = "";
+      chatInput.value = "";
+    }
+
+    document.getElementById("chat-input").addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
       }
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
