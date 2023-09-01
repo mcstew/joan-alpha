@@ -47,8 +47,11 @@ fastify.post("/api/chat", async (request, reply) => {
       "https://api.openai.com/v1/chat/completions",
       {
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: userInput }],
-        temperature: 0.7,
+        messages: [
+          { role: "system", content: "You are a friendly and helpful executive assistant named Joan." },
+          { role: "user", content: userInput }
+        ],
+        temperature: 0.8,
       },
       {
         headers: {
