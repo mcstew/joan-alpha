@@ -71,43 +71,47 @@
       <button onclick="sendMessage()">Send</button>
     </div>
   </div>
-  <script>
-    function sendMessage() {
-      console.log("Sending message...");
-      const chatInput = document.getElementById("chat-input");
-      const chatOutput = document.getElementById("chat-output");
-      const userInput = chatInput.value;
-      const serverUrl = "https://joan-alpha.glitch.me/api/chat";
-      const timestamp = new Date().toLocaleTimeString();
 
-      axios.post(serverUrl, { userInput: userInput })
-        .then((response) => {
-          const botReply = response.data.message;
-          chatOutput.innerHTML += `
-            <div class="chat-row">
-              <div class="chat-message">User: ${userInput}</div>
-              <div class="chat-timestamp">${timestamp}</div>
-            </div>
-            <div class="chat-row">
-              <div class="chat-message">Bot: ${botReply}</div>
-              <div class="chat-timestamp">${timestamp}</div>
-            </div>`;
-          chatOutput.scrollTop = chatOutput.scrollHeight;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          chatOutput.innerHTML += `<p>Bot: Sorry, I couldn't process that request.</p>`;
-        });
+<script>
+  function sendMessage() {
+    console.log("Sending message...");
+    const chatInput = document.getElementById("chat-input");
+    const chatOutput = document.getElementById("chat-output");
+    const userInput = chatInput.value;
+    const serverUrl = "https://joan-alpha.glitch.me/api/chat";
+    
+    // Get current time without seconds
+    const now = new Date();
+    const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      chatInput.value = "";
+    axios.post(serverUrl, { userInput: userInput })
+      .then((response) => {
+        const botReply = response.data.message;
+        chatOutput.innerHTML += `
+          <div class="chat-row">
+            <div class="chat-message"><strong>User:</strong> ${userInput}</div>
+            <div class="chat-timestamp" style="white-space: nowrap;">${timestamp}</div>
+          </div>
+          <div class="chat-row">
+            <div class="chat-message"><strong>Joan:</strong> ${botReply}</div>
+            <div class="chat-timestamp" style="white-space: nowrap;">${timestamp}</div>
+          </div>`;
+        chatOutput.scrollTop = chatOutput.scrollHeight;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        chatOutput.innerHTML += `<p><strong>Joan:</strong> Sorry, I couldn't process that request.</p>`;
+      });
+
+    chatInput.value = "";
+  }
+    // Add this at the end of your script to re-add the event listener
+  document.getElementById("chat-input").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
     }
-
-    document.getElementById("chat-input").addEventListener("keyup", function(event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        sendMessage();
-      }
-    });
-  </script>
+  });
+</script>  
 </body>
 </html>
