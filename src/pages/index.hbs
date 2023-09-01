@@ -73,25 +73,52 @@
   </div>
 
 <script>
-  function sendMessage() {
-    console.log("Sending message...");
-    const chatInput = document.getElementById("chat-input");
-    const chatOutput = document.getElementById("chat-output");
-    const userInput = chatInput.value;
-    const serverUrl = "https://joan-alpha.glitch.me/api/chat";
-    
-    // Get current time without seconds
-    const now = new Date();
-    const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+function sendMessage() {
+  console.log("Sending message...");
+  const chatInput = document.getElementById("chat-input");
+  const chatOutput = document.getElementById("chat-output");
+  const userInput = chatInput.value;
+  const serverUrl = "https://joan-alpha.glitch.me/api/chat";
+  
+  // Get current time without seconds
+  const now = new Date();
+  const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  // Display the user's message immediately
+  chatOutput.innerHTML += `
+    <div class="chat-row">
+      <div class="chat-message"><strong>User:</strong> ${userInput}</div>
+      <div class="chat-timestamp" style="white-space: nowrap;">${timestamp}</div>
+    </div>`;
+  chatOutput.scrollTop = chatOutput.scrollHeight;
+
+  // Initialize the "Joan is typing..." placeholder
+  let typingDots = '.';
+  
+  // Delay the "Joan is typing..." placeholder by 500ms
+  setTimeout(() => {
+    const typingPlaceholder = `<div class="chat-row" id="typing-placeholder">
+      <div class="chat-message"><strong>Joan:</strong><span id="typing-dots">.</span></div>
+      <div class="chat-timestamp" style="white-space: nowrap;"></div>
+    </div>`;
+    chatOutput.innerHTML += typingPlaceholder;
+    chatOutput.scrollTop = chatOutput.scrollHeight;
+
+    // Add dots at one-second intervals
+    const typingInterval = setInterval(() => {
+      typingDots += '.';
+      if (typingDots.length > 3) typingDots = '.';
+      document.getElementById("typing-dots").innerText = typingDots;
+    }, 1000);
 
     axios.post(serverUrl, { userInput: userInput })
       .then((response) => {
+        // Remove the "Joan is typing..." placeholder and stop the interval
+        clearInterval(typingInterval);
+        document.getElementById("typing-placeholder").remove();
+
         const botReply = response.data.message;
         chatOutput.innerHTML += `
-          <div class="chat-row">
-            <div class="chat-message"><strong>User:</strong> ${userInput}</div>
-            <div class="chat-timestamp" style="white-space: nowrap;">${timestamp}</div>
-          </div>
           <div class="chat-row">
             <div class="chat-message"><strong>Joan:</strong> ${botReply}</div>
             <div class="chat-timestamp" style="white-space: nowrap;">${timestamp}</div>
@@ -100,11 +127,16 @@
       })
       .catch((error) => {
         console.error("Error:", error);
+        // Remove the "Joan is typing..." placeholder and stop the interval
+        clearInterval(typingInterval);
+        document.getElementById("typing-placeholder").remove();
         chatOutput.innerHTML += `<p><strong>Joan:</strong> Sorry, I couldn't process that request.</p>`;
       });
 
-    chatInput.value = "";
-  }
+  }, 500);
+
+  chatInput.value = "";
+}
     // Add this at the end of your script to re-add the event listener
   document.getElementById("chat-input").addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
