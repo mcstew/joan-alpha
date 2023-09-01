@@ -2,6 +2,7 @@
 
   <head>
     <title>Simple GPT-3.5 Turbo Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
       body { font-family: Arial, sans-serif; margin: 0; padding: 0;
       background-color: #f4f4f4; } #chat-container { max-width: 960px; margin:
@@ -32,11 +33,11 @@
       function sendMessage() { console.log("Sending message..."); const
       chatInput = document.getElementById("chat-input"); const chatOutput =
       document.getElementById("chat-output"); const userInput = chatInput.value;
-      // Replace the following URL with the URL Glitch gives you after you
-      run your project const serverUrl =
-      "https://sponge-patch-jumpsuit.glitch.me/api/chat"; axios
-      .post(serverUrl, {userInput: userInput}) .then((response) => { const
-      botReply = response.data.message; chatOutput.innerHTML += `<p>User:
+      // Replace the following URL with the URL Glitch gives you after you run
+      your project const serverUrl =
+      "https://sponge-patch-jumpsuit.glitch.me/api/chat"; axios .post(serverUrl,
+      {userInput: userInput}) .then((response) => { const botReply =
+      response.data.message; chatOutput.innerHTML += `<p>User:
       ${userInput}</p>`; chatOutput.innerHTML += `<p>Bot: ${botReply}</p>`;
       chatOutput.scrollTop = chatOutput.scrollHeight; // Auto-scroll to the
       bottom }) .catch((error) => { console.error("Error:", error);
