@@ -1,15 +1,15 @@
 const path = require("path");
+const axios = require("axios"); // Required for making API calls
 
 // Require the fastify framework and instantiate it
 const fastify = require("fastify")({
-  // set this to true for detailed logging:
   logger: false,
 });
 
 // Setup our static files
 fastify.register(require("@fastify/static"), {
   root: path.join(__dirname, "public"),
-  prefix: "/", // optional: default '/'
+  prefix: "/",
 });
 
 // fastify-formbody lets us parse incoming forms
@@ -24,11 +24,9 @@ fastify.register(require("@fastify/view"), {
 
 // Our main GET home page route, pulls from src/pages/index.hbs
 fastify.get("/", function (request, reply) {
-  // params is an object we'll pass to our handlebars template
   let params = {
     greeting: "Hello Node!",
   };
-  // request.query.paramName <-- a querystring example
   return reply.view("/src/pages/index.hbs", params);
 });
 
@@ -37,8 +35,34 @@ fastify.post("/", function (request, reply) {
   let params = {
     greeting: "Hello Form!",
   };
-  // request.body.paramName <-- a form post example
   return reply.view("/src/pages/index.hbs", params);
+});
+
+// Your API endpoint
+fastify.post("/api/chat", async (request, reply) => {
+  const api_key = process.env.OPENAI_API;
+  try {
+    const userInput = request.body.userInput;
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: userInput }],
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${api_key}`,
+        },
+      }
+    );
+    reply
+      .status(200)
+      .send({ message: response.data.choices[0].message.content });
+  } catch (error) {
+    reply.status(500).send({ error: "An error occurred" });
+  }
 });
 
 // Run the server and report out to the logs
