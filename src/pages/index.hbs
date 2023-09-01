@@ -1,7 +1,7 @@
 <html>
 
   <head>
-    <title>Simple GPT-3.5 Turbo Chat</title>
+    <title>Joan [Alpha]</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
       body { font-family: Arial, sans-serif; margin: 0; padding: 0;
@@ -15,35 +15,37 @@
     </style>
   </head>
 
-  <body>
+   <body>
     <div id="chat-container">
-      <h1>Simple GPT-3.5 Turbo Chat</h1>
-
-      <div id="chat-output">
-        <!-- Chat messages will appear here -->
-      </div>
-
+      <h1>Joan Alpha Test</h1>
+      <div id="chat-output"></div>
       <div>
         <input type="text" id="chat-input" />
         <button onclick="sendMessage()">Send</button>
       </div>
     </div>
-
     <script>
-      function sendMessage() { console.log("Sending message..."); const
-      chatInput = document.getElementById("chat-input"); const chatOutput =
-      document.getElementById("chat-output"); const userInput = chatInput.value;
-      // Replace the following URL with the URL Glitch gives you after you run
-      your project const serverUrl =
-      "https://sponge-patch-jumpsuit.glitch.me/api/chat"; axios .post(serverUrl,
-      {userInput: userInput}) .then((response) => { const botReply =
-      response.data.message; chatOutput.innerHTML += `<p>User:
-      ${userInput}</p>`; chatOutput.innerHTML += `<p>Bot: ${botReply}</p>`;
-      chatOutput.scrollTop = chatOutput.scrollHeight; // Auto-scroll to the
-      bottom }) .catch((error) => { console.error("Error:", error);
-      chatOutput.innerHTML += `<p>Bot: Sorry, I couldn't process that
-      request.</p>`; }); chatInput.value = ""; // Clear the input field }
+      function sendMessage() {
+        console.log("Sending message...");
+        const chatInput = document.getElementById("chat-input");
+        const chatOutput = document.getElementById("chat-output");
+        const userInput = chatInput.value;
+        const serverUrl = "https://sponge-patch-jumpsuit.glitch.me/api/chat"; // Replace with your Glitch URL
+
+        axios.post(serverUrl, { userInput: userInput })
+          .then((response) => {
+            const botReply = response.data.message;
+            chatOutput.innerHTML += `<p>User: ${userInput}</p>`;
+            chatOutput.innerHTML += `<p>Bot: ${botReply}</p>`;
+            chatOutput.scrollTop = chatOutput.scrollHeight;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            chatOutput.innerHTML += `<p>Bot: Sorry, I couldn't process that request.</p>`;
+          });
+
+        chatInput.value = "";
+      }
     </script>
   </body>
-
 </html>
